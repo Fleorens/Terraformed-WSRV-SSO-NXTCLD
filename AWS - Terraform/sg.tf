@@ -1,7 +1,7 @@
 resource "aws_security_group" "allow-all" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
-name="allow-ssh-http-https-rdp-ldap-icmp"
+name="allow-ssh-http-https-rdp-ldap-icmp-winrm"
 egress {
 from_port = 22
 to_port = 22
@@ -47,6 +47,13 @@ cidr_blocks = ["0.0.0.0/0"]
 egress {
 from_port = 636
 to_port = 636
+protocol = "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+
+egress {
+from_port = 5985
+to_port = 5986
 protocol = "tcp"
 cidr_blocks = ["0.0.0.0/0"]
 }

@@ -8,59 +8,94 @@ resource "aws_instance" "win-example" {
   instance_type = "t2.medium"
   subnet_id = "${aws_subnet.prod-subnet-public-1.id}"
   key_name      = aws_key_pair.mykey.key_name
-  user_data = data.template_file.userdata_win.rendered
   vpc_security_group_ids=["${aws_security_group.allow-all.id}"]
-
+  get_password_data = "true"
   tags = {
     Name = "Windows_Server"
   }
- 
-}
 
-data "template_file" "userdata_win" {
-  template = <<EOF
+user_data = <<EOF
+
 <script>
 echo "" > _INIT_STARTED_
 net user ${var.INSTANCE_USERNAME} /add /y
 net user ${var.INSTANCE_USERNAME} ${var.INSTANCE_PASSWORD}
 net localgroup administrators ${var.INSTANCE_USERNAME} /add
+net user "cesimsi" /add /y
+net user "cesimsi" ${var.INSTANCE_PASSWORD}
+net localgroup administrators "cesimsi" /add
 Enable-PSRemoting -Force
-winrm quickconfig -q & winrm set winrm/config @{MaxTimeoutms="1800000"} & winrm set winrm/config/service @{AllowUnencrypted="true"} & winrm set winrm/config/service/auth @{Basic="true"}
 echo "" > _INIT_COMPLETE_
 </script>
 <powershell>
-Install-WindowsFeature RSAT-AD-Tools -IncludeManagementTools -IncludeAllSubFeature
-Install-WindowsFeature AD-Domain-Services -IncludeManagementTools -IncludeAllSubFeature
-Install-WindowsFeature DNS -IncludeManagementTools -IncludeAllSubFeature
+netsh advfirewall firewall add rule name="SSH 22" protocol=TCP dir=in localport=22 action=allow
 
-$SafeModeClearPassword = "passwd12345+"
-$SafeModeAdministratorPassword = ConvertTo-SecureString $SafeModeClearPassword -AsPlaintext -Force
-$DomainNameDNS = "groupefyb.fr"
-$DomainNameNetbios = "GROUPEFYB"
-
-$ForestConfiguration = @{
-'-DatabasePath'= 'C:\Windows\NTDS';
-'-DomainMode' = 'Default';
-'-DomainName' = $DomainNameDNS;
-'-DomainNetbiosName' = $DomainNameNetbios;
-'-SafeModeAdministratorPassword' = $SafeModeAdministratorPassword;
-'-ForestMode' = 'Default';
-'-InstallDns' = $true;
-'-LogPath' = 'C:\Windows\NTDS';
-'-NoRebootOnCompletion' = $false;
-'-SysvolPath' = 'C:\Windows\SYSVOL';
-'-Force' = $true;
-'-CreateDnsDelegation' = $false }
-
-Import-Module ADDSDeployment
-Install-ADDSForest @ForestConfiguration
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+Start-Service sshd
 </powershell>
 <persist>false</persist>
 EOF
+provisioner "file" {
+    source = "script_installadds.ps1"
+    destination = "C:/script_installadds.ps1"
+connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
 }
-
-output "ip" {
- 
-value="${aws_instance.win-example.public_ip}"
- 
+provisioner "file" {
+    source = "script_adds.ps1"
+    destination = "C:/script_adds.ps1"
+connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
+}
+provisioner "file" {
+    source = "script_adfs.ps1"
+    destination = "C:/script_adfs.ps1"
+connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
+}
+provisioner "file" {
+    source = "script_runscript.ps1"
+    destination = "C:/script_runscript.ps1"
+connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
+}
+provisioner "remote-exec" {
+    inline = [
+            "powershell.exe Set-ExecutionPolicy Unrestricted -force",
+            "powershell.exe C:/script_runscript.ps1",
+            ]
+   connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
+}
 }

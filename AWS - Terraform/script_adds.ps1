@@ -1,37 +1,36 @@
-Install-WindowsFeature RSAT-AD-Tools -IncludeManagementTools -IncludeAllSubFeature
-Install-WindowsFeature AD-Domain-Services -IncludeManagementTools -IncludeAllSubFeature
-Install-WindowsFeature DNS -IncludeManagementTools -IncludeAllSubFeature
+  $SafeModeClearPassword = "passwd12345+"
+  $SafeModeAdministratorPassword = ConvertTo-SecureString $SafeModeClearPassword -AsPlaintext -Force
+  $DomainNameDNS = "groupefyb.fr"
+  $DomainNameNetbios = "GROUPEFYB"
+  
+  $ForestConfiguration = @{
+  '-DatabasePath'= 'C:\Windows\NTDS';
+  '-DomainMode' = 'Default';
+  '-DomainName' = $DomainNameDNS;
+  '-DomainNetbiosName' = $DomainNameNetbios;
+  '-SafeModeAdministratorPassword' = $SafeModeAdministratorPassword;
+  '-ForestMode' = 'Default';
+  '-InstallDns' = $true;
+  '-LogPath' = 'C:\Windows\NTDS';
+  '-NoRebootOnCompletion' = $true;
+  '-SysvolPath' = 'C:\Windows\SYSVOL';
+  '-Force' = $true;
+  '-CreateDnsDelegation' = $false }
+  
+  Import-Module ADDSDeployment
+  Install-ADDSForest @ForestConfiguration
+  
+  Unregister-ScheduledTask -TaskName "ADDS_Configure" -Confirm:$false
 
-$SafeModeClearPassword = "passwd12345+"
-$SafeModeAdministratorPassword = ConvertTo-SecureString $SafeModeClearPassword -AsPlaintext -Force
-$DomainNameDNS = "groupefyb.fr"
-$DomainNameNetbios = "GROUPEFYB"
+  $taskName = "ADFS_Configure"
+  $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+  $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File "C:\script_adfs.ps1"'
+  $trigger = New-ScheduledTaskTrigger -AtLogon
+  $settings = New-ScheduledTaskSettingsSet -Compatibility Win8
+  $principal = New-ScheduledTaskPrincipal -GroupId BUILTIN\Administrators -RunLevel Highest
+  $definition = New-ScheduledTask -Action $action -Principal $principal -Trigger $trigger -Settings $settings -Description "Run $($taskName) at startup"
+  Register-ScheduledTask -TaskName $taskName -InputObject $definition
+  
+  Start-Sleep -s 20s
 
-$ForestConfiguration = @{
-'-DatabasePath'= 'C:\Windows\NTDS';
-'-DomainMode' = 'Default';
-'-DomainName' = $DomainNameDNS;
-'-DomainNetbiosName' = $DomainNameNetbios;
-'-SafeModeAdministratorPassword' = $SafeModeAdministratorPassword;
-'-ForestMode' = 'Default';
-'-InstallDns' = $true;
-'-LogPath' = 'C:\Windows\NTDS';
-'-NoRebootOnCompletion' = $false;
-'-SysvolPath' = 'C:\Windows\SYSVOL';
-'-Force' = $true;
-'-CreateDnsDelegation' = $false }
-
-Import-Module ADDSDeployment
-Install-ADDSForest @ForestConfiguration
-
-New-ADUser `
-          -SamAccountName "cesimsi" `
-          -UserPrincipalName "cesimsi@groupefyb.fr" `
-          -Name "CESI MSI" `
-          -GivenName "CESI" `
-          -Surname "MSI" `
-          -Enabled $True `
-          -Department "IT" `
-          -AccountPassword (convertto-securestring "passwd12345+" -AsPlainText -Force)
-Add-AdGroupMember -Identity "Domain Admins" -Members "cesimsi"
-Rename-Computer -NewName WSRV-AD -Force
+  Restart-Computer
