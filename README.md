@@ -205,9 +205,9 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/Fleorens) - florian.deruwez@outlook.com
+DERUWEZ Florian - [@Fleorens](https://twitter.com/Fleorens) - florian.deruwez@outlook.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/Fleorens/Terraformed-WSRV-SSO-NXTCLD)
+Project Link: [https://github.com/Fleorens/Terraformed-WSRV-SSO-NXTCLD](https://github.com/Fleorens/Terraformed-WSRV-SSO-NXTCLD)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
