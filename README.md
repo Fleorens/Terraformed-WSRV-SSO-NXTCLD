@@ -102,6 +102,7 @@ Created for the MSI formation at CESI.
   AWS Environnment
   Admin account on AWS
   Git
+  AWS CLI on your computer
 ```
 
 ### Installation
