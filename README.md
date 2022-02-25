@@ -116,7 +116,7 @@ Created for the MSI formation at CESI.
    $DomainNameDNS = "example.fr"
    $DomainNameNetbios = "EXAMPLE"
    ```
-4. Create an SSH key pair for AWS
+4. Create an SSH key pair for AWS with AWS CLI & Powershell
   ```powershell
   (New-EC2KeyPair -KeyName "my-key-pair" -KeyType "rsa").KeyMaterial | Out-File -Encoding ascii -FilePath C:\path\mykey.pem
   ```
