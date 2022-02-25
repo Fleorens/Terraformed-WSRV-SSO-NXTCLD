@@ -116,17 +116,18 @@ Created for the MSI formation at CESI.
    $DomainNameDNS = "example.fr"
    $DomainNameNetbios = "EXAMPLE"
    ```
-4. Create an SSH key pair for AWS with AWS CLI & Powershell
+4. Change the variable for the local admin (optionnal)
+5. Create an SSH key pair for AWS with AWS CLI & Powershell
   ```powershell
   (New-EC2KeyPair -KeyName "my-key-pair" -KeyType "rsa").KeyMaterial | Out-File -Encoding ascii -FilePath C:\path\mykey.pem
   ```
-5. Run Terraform
+6. Run Terraform
    ```sh
    terraform init
    terraform plan
    terraform apply
    ```
-6. Once the installation with Terraform is complete (about 7min)
+7. Once the installation with Terraform is complete (about 7min)
 
 #### Nextcloud :
   
