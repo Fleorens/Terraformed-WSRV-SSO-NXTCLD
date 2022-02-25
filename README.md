@@ -110,7 +110,7 @@ Created for the MSI formation at CESI.
    ```sh
    git clone https://github.com/Fleorens/Terraformed-WSRV-SSO-NXTCLD.git
    ```
-2. Change vars.tf / .tfvars with your wish
+2. Change vars.tf / .tfvars with your AWS keys
 3. Change the AD variables in the .ps1
    ```powershell
    $DomainNameDNS = "example.fr"
