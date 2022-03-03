@@ -138,7 +138,7 @@ Created for the MSI formation at CESI.
 
 #### Nextcloud :
   
-  You can now access to the Nextcloud part to : `http:\\AWS_INSTANCE_PUBLIC_IP:8080` and create your admin account.
+  You can now access to the Nextcloud part to : `https:\\AWS_INSTANCE_PUBLIC_IP:8082` and create your admin account.
   
 #### Windows Server :
   
