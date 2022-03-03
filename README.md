@@ -61,7 +61,13 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#ad-synchro">AD Synchro</a></li>
+        <li><a href="#sso-implementation">SSO Implementation</a></li>
+      </ul>
+    </li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -160,6 +166,8 @@ You'll now have a ADDS/ADFS configured Windows Server to connect at your Nextclo
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+### AD Synchro
+
 You can connect Nextcloud throught your AD to connect users.
 
 Example for the configuration via the LDAP/AD integration plugin:
@@ -172,7 +180,49 @@ Example for the configuration via the LDAP/AD integration plugin:
 
 ![image](https://user-images.githubusercontent.com/96118195/155697179-5011cc2e-8c90-4d71-a01a-587c9c92660c.png)
 
-The part with the SSO will come after some improvements.
+### SSO Implementation
+
+Set New Host for the Nextcloud instance in the DNS Manager.
+
+![image](https://user-images.githubusercontent.com/96118195/156589495-8c8cdeba-ced8-4bb5-b00c-a0a8f1c8beb1.png)
+
+In AD FS Management, go to Certificates and click on view certificate for the Token-Signing Certificate. Then copy it to `C:\Program Files\OpenSSL-Win64\bin\`
+
+![image](https://user-images.githubusercontent.com/96118195/156590690-57e19e1a-198a-47ec-917d-8d4752f77959.png)
+
+Go to `C:\Program Files\OpenSSL-Win64\bin\` in the explorer and open powershell in the folder. Then type `openssl x509 -inform der -in yourcert.cer -out yourcert.pem`
+
+Open your `cert.pem` and copy everything in it.
+
+In Nextcloud, install the SSO plugin.
+
+![image](https://user-images.githubusercontent.com/96118195/156591681-e9145ce1-9788-4aac-a265-2d78193bc250.png)
+
+And go into `Settings -> SSO & SAML authentication` and click on `Use Build Authentication`.
+
+Set the variable with your key and domain, etc...
+
+![image](https://user-images.githubusercontent.com/96118195/156592504-4f6aa04e-204f-45dd-be8b-5c58c8e59ce9.png)
+
+Then click on `Download Metadata XML`
+
+Return on Windows and click on `Add Relying Party Trust` and import the metadata and click on next till the end.
+
+![image](https://user-images.githubusercontent.com/96118195/156593108-79d6c4c6-864e-42f9-aa36-67712eda48cf.png)
+
+Then click on `Edit Claim Issuance Policy` and add a rule.
+
+![image](https://user-images.githubusercontent.com/96118195/156593372-673554f9-101d-4d36-8797-652868c42c86.png)
+
+Set the same variable as mine and click on Finish.
+
+![image](https://user-images.githubusercontent.com/96118195/156593579-bf4d63d1-52db-46b3-908c-69ee733a7771.png)
+
+Logout on Nextcloud and click on `SSO & SAML log in` and log in.
+
+![image](https://user-images.githubusercontent.com/96118195/156594218-9502454d-37f9-4ab3-bcd7-56737152a24b.png)
+
+Now, your logged with your user ! Thanks to SSO ! :D
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
