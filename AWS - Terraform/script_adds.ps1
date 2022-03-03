@@ -31,6 +31,6 @@
   $definition = New-ScheduledTask -Action $action -Principal $principal -Trigger $trigger -Settings $settings -Description "Run $($taskName) at startup"
   Register-ScheduledTask -TaskName $taskName -InputObject $definition
   
-  Start-Sleep -s 20s
+  Start-Sleep -Seconds 20
 
   Restart-Computer

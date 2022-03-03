@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      - nxt-network
+
+  app:
+    build: ./fpm
+    volumes:
+      - ./data/nextcloud:/var/www/html
+      - ./config/php.ini:/usr/local/etc/php/php.ini
+    restart: always
+    networks:
+      - nxt-network
+
+  web:
+    build: .
+    container_name: nxtweb
+    ports:
+      - "8081:80"
+      - "8082:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/nextcloud:/var/www/html
+    restart: always
+    networks:
+      - nxt-network
+      
+networks:
+  nxt-network:
+    driver: bridge
+

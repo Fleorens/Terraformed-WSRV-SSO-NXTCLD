@@ -15,6 +15,8 @@ Register-ScheduledTask -TaskName $taskName2 -InputObject $definition
 
 Unregister-ScheduledTask -TaskName "ADDS-ADFS_Install" -Confirm:$false
 
-Start-Sleep -Seconds 20s
+Start-Sleep -Seconds 20
+
+Rename-Computer WSRV
 
 Restart-Computer
