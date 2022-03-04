@@ -1,4 +1,4 @@
-resource "aws_security_group" "allow-all" {
+resource "aws_security_group" "allow-ssh-http-https-rdp-ldap-icmp-winrm" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
 name="allow-ssh-http-https-rdp-ldap-icmp-winrm"
