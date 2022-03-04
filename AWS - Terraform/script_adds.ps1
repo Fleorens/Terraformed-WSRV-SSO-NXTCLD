@@ -1,3 +1,5 @@
+  ## add variables and install AD for WS Server
+  
   $SafeModeClearPassword = "passwd12345+"
   $SafeModeAdministratorPassword = ConvertTo-SecureString $SafeModeClearPassword -AsPlaintext -Force
   $DomainNameDNS = "groupefyb.fr"

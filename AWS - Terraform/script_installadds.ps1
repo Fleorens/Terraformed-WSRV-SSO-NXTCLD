@@ -1,3 +1,5 @@
+## Install RSAT / ADS / DNS / ADFS
+
 Install-WindowsFeature RSAT-AD-Tools -IncludeManagementTools -IncludeAllSubFeature
 Install-WindowsFeature AD-Domain-Services -IncludeManagementTools -IncludeAllSubFeature
 Install-WindowsFeature DNS -IncludeManagementTools -IncludeAllSubFeature

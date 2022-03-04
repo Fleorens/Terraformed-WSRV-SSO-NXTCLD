@@ -5,6 +5,8 @@
 #Set-ItemProperty $RegPath "DefaultUsername" -Value "$DefaultUsername" -type String
 #Set-ItemProperty $RegPath "DefaultPassword" -Value "$DefaultPassword" -type String
 
+##  Create ADDS-ADFS_Install Task Scheduled
+
 $taskName = "ADDS-ADFS_Install"
 $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-File "C:\script_installadds.ps1"'
