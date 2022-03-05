@@ -84,6 +84,18 @@ connection {
     password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
   }
 }
+provisioner "file" {
+    source = "script_get_x509.ps1"
+    destination = "C:/script_get_x509.ps1"
+connection {
+    host = self.public_ip
+    type = "ssh"
+    user = "Administrator"
+    timeout = "10m"
+    target_platform = "windows"
+    password = "${rsadecrypt(aws_instance.win-example.password_data,file("mykey.pem"))}"
+  }
+}
 provisioner "remote-exec" {
     inline = [
             "powershell.exe Set-ExecutionPolicy Unrestricted -force",
