@@ -186,13 +186,9 @@ Set New Host for the Nextcloud instance in the DNS Manager.
 
 ![image](https://user-images.githubusercontent.com/96118195/156589495-8c8cdeba-ced8-4bb5-b00c-a0a8f1c8beb1.png)
 
-In AD FS Management, go to Certificates and click on view certificate for the Token-Signing Certificate. Then copy it to `C:\Program Files\OpenSSL-Win64\bin\`
+The ``` script_get_x509.ps1 ``` is used to recover the certificate Token Signing so at the end of the WSRV installation there will be a .pem on the Administrator Desktop.
 
-![image](https://user-images.githubusercontent.com/96118195/156590690-57e19e1a-198a-47ec-917d-8d4752f77959.png)
-
-Go to `C:\Program Files\OpenSSL-Win64\bin\` in the explorer and open powershell in the folder. Then type `openssl x509 -inform der -in yourcert.cer -out yourcert.pem`
-
-Open your `cert.pem` and copy everything in it.
+Open your `adfs_pem.pem` and copy everything in it.
 
 In Nextcloud, install the SSO plugin.
 
