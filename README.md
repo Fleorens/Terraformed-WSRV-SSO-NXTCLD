@@ -130,6 +130,7 @@ Created for the MSI formation at CESI.
   ```
 6. Run Terraform
    ```sh
+   terraform login
    terraform init
    terraform plan
    terraform apply
@@ -138,7 +139,7 @@ Created for the MSI formation at CESI.
 
 #### Nextcloud :
   
-  You can now access to the Nextcloud part to : `https:\\AWS_INSTANCE_PUBLIC_IP:8082` and create your admin account.
+  You can now access to the Nextcloud part to : `https:\\AWS_INSTANCE_PUBLIC_IP:8082` or `https:\\AWS_INSTANCE_PRIVATE_IP:8082` (on WSRV) and create your admin account.
   
 #### Windows Server :
   
@@ -151,6 +152,7 @@ Created for the MSI formation at CESI.
    2 - script_installadds.ps1 (Auto Reboot)
    3 - script_adds.ps1 (Auto Reboot)
    4 - script_adfs.ps1
+   5 - script_get_x509.ps1
    ```
 
 So, you will have to connect a first time with the Administrator Account and wait till the reboot.
