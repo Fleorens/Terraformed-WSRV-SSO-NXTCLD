@@ -1,6 +1,6 @@
 resource "aws_instance" "cloud_srv" {
   ami           = "ami-033b95fb8079dc481"
-  instance_type = "t2.medium"
+  instance_type = "t3.medium"
   subnet_id = "${aws_subnet.prod-subnet-public-1.id}"
   key_name=aws_key_pair.mykey.key_name
   vpc_security_group_ids = ["${aws_security_group.allow-all.id}"]
